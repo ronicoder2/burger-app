@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {withRouter} from 'react-router-dom';
 import Pux from '../../hoc/Pux.js'
 import Burger from '../../Components/Burger/Burger.js'
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls.js'
@@ -35,39 +36,54 @@ class BurgerBuilder extends Component {
 
       onContinuePurchaseHandler=()=>{
           // alert('dude please continue');
-          this.setState({loading:true});
-          const order= {
-            ingredients:this.state.ingredients,
+        //   this.setState({loading:true});
+        //   const order= {
+        //     ingredients:this.state.ingredients,
 
-            customerinfo:{
-                name:"himanshu",
-                email:"",
+        //     customerinfo:{
+        //         name:"himanshu",
+        //         email:"",
                 
-                address:{
+        //         address:{
                     
-                    street:"dowing",
-                    zipCode:"23",
-                    country:"india"
-                }
-            }
+        //             street:"dowing",
+        //             zipCode:"23",
+        //             country:"india"
+        //         }
+        //     }
 
 
 
-          }
+        //   }
           
-         let recievedData= null;
+        //  let recievedData= null;
  
-          axiosInstance.post('insertCustomer', order).
-          then(response => 
-            this.setState({loading:false, purchasing:false})
-            ).
-          catch(error => 
+        //   axiosInstance.post('insertCustomer', order).
+        //   then(response => 
+        //     this.setState({loading:false, purchasing:false})
+        //     ).
+        //   catch(error => 
             
-           { console.log(error)
-            this.setState({loading:false,purchasing:false})}
-            );
+        //    { console.log(error)
+        //     this.setState({loading:false,purchasing:false})}
+        //     );
 
           
+       
+       
+       let queryParams=[];
+       for(let i in this.state.ingredients )
+       {
+          queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i])) ;
+       }
+
+       const queryString= queryParams.join('&');
+       this.props.history.push({
+        pathname: '/checkout',
+        search: '?' + queryString
+    });
+
+       
 
       }
 
@@ -196,4 +212,4 @@ class BurgerBuilder extends Component {
 
 }
 
-export default withErrorHandler(BurgerBuilder,axiosInstance);
+export default withErrorHandler(withRouter(BurgerBuilder),axiosInstance);
